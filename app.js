@@ -12,19 +12,27 @@ app.get('/', (req, res) => {
     res.json(alunos)
 });
 
-//Busca aluno pelo rac
-app.get('/alunos', (req, res) => {
+//Busca aluno pelo ra
+app.get('/aluno/:ra', (req, res) => {
     const ra = req.params.ra;
-    const aluno = alunos.findIndex(aluno => aluno.ra === ra);
+    console.log("RA recebido:", ra);
+    console.log(alunos)
+    const index = buscaRa(ra);
+    console.log("Index encontrado:", index);
 
-    if (aluno) {
-        res.send(aluno);
+    if (index !== -1) {
+        res.json(alunos[index]); // Envie o aluno encontrado como resposta
     } else {
         res.status(404).send('Aluno não encontrado');
     }
 });
 
+function buscaRa(ra){
+    const index = alunos.findIndex(aluno => aluno.ra === parseInt(ra));
+    return index;
+}
 
+//cadastra aluno
 app.post('/', (req, res) => {
     const novoAluno = {
         ra: req.body.aluno.ra,
@@ -43,3 +51,4 @@ app.post('/curso', (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
 })
+
